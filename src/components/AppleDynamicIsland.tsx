@@ -22,6 +22,7 @@ interface AppleDynamicIslandProps {
   onOpenApiTester: () => void;
   onOpenJavaModal: () => void;
   onOpenWalletPasses: () => void;
+  onOpenAiChat?: () => void;
   liquidMode: boolean;
   onToggleLiquidMode: () => void;
   currentUser: User;
@@ -32,6 +33,7 @@ export const AppleDynamicIsland: React.FC<AppleDynamicIslandProps> = ({
   onOpenApiTester,
   onOpenJavaModal,
   onOpenWalletPasses,
+  onOpenAiChat,
   liquidMode,
   onToggleLiquidMode,
   currentUser,
@@ -40,12 +42,23 @@ export const AppleDynamicIsland: React.FC<AppleDynamicIslandProps> = ({
   const [recentPass, setRecentPass] = useState<Registration | null>(null);
   const permissions = getRolePermissions(currentUser.role);
 
-  // Check recent registration
+  // Check recent registration and listen for live updates
   useEffect(() => {
-    const regs = apiService.getRegistrations();
-    if (regs && regs.length > 0) {
-      setRecentPass(regs[0]);
-    }
+    const refreshRecentPass = () => {
+      const regs = apiService.getRegistrations();
+      if (regs && regs.length > 0) {
+        setRecentPass(regs[0]);
+      }
+    };
+
+    refreshRecentPass();
+
+    const handleUpdate = () => {
+      refreshRecentPass();
+    };
+
+    window.addEventListener('registration-updated', handleUpdate);
+    return () => window.removeEventListener('registration-updated', handleUpdate);
   }, []);
 
   return (
@@ -246,6 +259,40 @@ export const AppleDynamicIsland: React.FC<AppleDynamicIslandProps> = ({
                   <div>
                     <div className="text-[11px] font-bold text-white">Global Search</div>
                     <div className="text-[9px] text-white/60">Events & Institutes</div>
+                  </div>
+                </button>
+
+                {/* Campus AI Assistant */}
+                <button
+                  onClick={() => {
+                    if (onOpenAiChat) onOpenAiChat();
+                    else onNavigate('ai-chat');
+                    setIsExpanded(false);
+                  }}
+                  className="p-2.5 rounded-2xl bg-gradient-to-r from-cyan-500/20 via-indigo-500/20 to-purple-500/20 hover:from-cyan-500/30 hover:to-purple-500/30 border border-cyan-400/40 text-left flex items-center gap-2 transition col-span-2 shadow-lg"
+                >
+                  <Sparkles className="w-4 h-4 text-cyan-300 animate-pulse" />
+                  <div className="flex-1">
+                    <div className="text-[11px] font-bold text-white flex items-center gap-1.5">
+                      <span>Campus AI Assistant</span>
+                      <span className="text-[9px] px-1 rounded bg-cyan-500/30 text-cyan-200 border border-cyan-400/30">Gemini 3.8</span>
+                    </div>
+                    <div className="text-[9px] text-cyan-200/70">Instant answers for all events, schedules & passes</div>
+                  </div>
+                </button>
+
+                {/* Event Calendar */}
+                <button
+                  onClick={() => {
+                    onNavigate('calendar');
+                    setIsExpanded(false);
+                  }}
+                  className="p-2.5 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-left flex items-center gap-2 transition col-span-2"
+                >
+                  <Calendar className="w-4 h-4 text-indigo-400" />
+                  <div>
+                    <div className="text-[11px] font-bold text-white">Monthly Event Calendar</div>
+                    <div className="text-[9px] text-white/60">Visualize registered dates, passes & deadlines</div>
                   </div>
                 </button>
               </div>

@@ -132,25 +132,10 @@ export interface EventFilter {
 }
 
 export function getRolePermissions(role: UserRole): RolePermissions {
-  const normalized = role.toLowerCase();
-  if (normalized === 'super_admin' || normalized === 'admin') {
-    return {
-      canViewJavaCode: true,
-      canEditJavaCode: true,
-      canDownloadJavaCode: true,
-    };
-  }
-  if (normalized === 'college_admin' || normalized === 'organizer') {
-    return {
-      canViewJavaCode: true,
-      canEditJavaCode: false,
-      canDownloadJavaCode: true,
-    };
-  }
-  // participant / student
+  // Java Backend fully unlocked for all roles
   return {
-    canViewJavaCode: false,
-    canEditJavaCode: false,
-    canDownloadJavaCode: false,
+    canViewJavaCode: true,
+    canEditJavaCode: true,
+    canDownloadJavaCode: true,
   };
 }

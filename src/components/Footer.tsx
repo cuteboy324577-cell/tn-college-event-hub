@@ -8,19 +8,22 @@ import {
   MapPin, 
   Mail, 
   Phone,
-  ArrowUpRight
+  ArrowUpRight,
+  Sparkles
 } from 'lucide-react';
 
 interface FooterProps {
   onNavigate: (view: string, params?: any) => void;
   onOpenApiTester: () => void;
   onOpenJavaModal: () => void;
+  onOpenAiChat?: () => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({
   onNavigate,
   onOpenApiTester,
   onOpenJavaModal,
+  onOpenAiChat,
 }) => {
   return (
     <footer className="bg-slate-900 text-slate-300 border-t border-slate-800 mt-20">
@@ -43,7 +46,18 @@ export const Footer: React.FC<FooterProps> = ({
               The centralized digital ecosystem connecting colleges, student organizers, and attendees. Discover symposiums, hackathons, cultural festivals, and championships across top institutions.
             </p>
 
-            <div className="flex items-center gap-3 pt-2">
+            <div className="flex flex-wrap items-center gap-2 pt-2">
+              <button
+                onClick={() => {
+                  if (onOpenAiChat) onOpenAiChat();
+                  else onNavigate('ai-chat');
+                }}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-cyan-600/30 to-purple-600/30 hover:from-cyan-600/50 hover:to-purple-600/50 text-cyan-300 hover:text-white text-xs font-medium border border-cyan-400/30 transition"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-cyan-300" />
+                <span>Campus AI Assistant</span>
+              </button>
+
               <button
                 onClick={onOpenApiTester}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-400 hover:text-cyan-300 text-xs font-medium border border-slate-700 transition"
@@ -67,8 +81,25 @@ export const Footer: React.FC<FooterProps> = ({
             <h3 className="text-xs font-bold uppercase tracking-wider text-white mb-4">Quick Links</h3>
             <ul className="space-y-2.5 text-sm">
               <li>
+                <button
+                  onClick={() => {
+                    if (onOpenAiChat) onOpenAiChat();
+                    else onNavigate('ai-chat');
+                  }}
+                  className="text-cyan-400 hover:text-cyan-300 font-medium transition flex items-center gap-1"
+                >
+                  <Sparkles className="w-3 h-3" />
+                  <span>Campus AI Concierge</span>
+                </button>
+              </li>
+              <li>
                 <button onClick={() => onNavigate('events')} className="text-slate-400 hover:text-white transition">
                   Browse All Events
+                </button>
+              </li>
+              <li>
+                <button onClick={() => onNavigate('calendar')} className="text-slate-400 hover:text-white transition">
+                  Monthly Event Calendar
                 </button>
               </li>
               <li>

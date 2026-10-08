@@ -12,7 +12,9 @@ import {
   Droplets, 
   ChevronDown, 
   ChevronUp,
-  Lock 
+  Lock,
+  CalendarDays,
+  Sparkles
 } from 'lucide-react';
 import { User, getRolePermissions } from '../types';
 
@@ -22,6 +24,7 @@ interface AppleLiquidDockProps {
   onOpenApiTester: () => void;
   onOpenJavaModal: () => void;
   onOpenWalletPasses: () => void;
+  onOpenAiChat?: () => void;
   liquidMode: boolean;
   onToggleLiquidMode: () => void;
   currentUser: User;
@@ -33,6 +36,7 @@ export const AppleLiquidDock: React.FC<AppleLiquidDockProps> = ({
   onOpenApiTester,
   onOpenJavaModal,
   onOpenWalletPasses,
+  onOpenAiChat,
   liquidMode,
   onToggleLiquidMode,
   currentUser,
@@ -43,7 +47,16 @@ export const AppleLiquidDock: React.FC<AppleLiquidDockProps> = ({
 
   const dockItems = [
     { id: 'home', label: 'Home', icon: Home, action: () => onNavigate('home') },
+    { 
+      id: 'ai-chat', 
+      label: 'Campus AI Assistant', 
+      icon: Sparkles, 
+      action: onOpenAiChat ? onOpenAiChat : () => onNavigate('ai-chat'),
+      badge: 'AI',
+      highlight: true
+    },
     { id: 'events', label: 'Events', icon: Calendar, action: () => onNavigate('events') },
+    { id: 'calendar', label: 'Calendar', icon: CalendarDays, action: () => onNavigate('calendar') },
     { id: 'colleges', label: 'Colleges', icon: Building2, action: () => onNavigate('colleges') },
     { id: 'search', label: 'Search', icon: Search, action: () => onNavigate('search') },
     { id: 'passes', label: 'My Passes', icon: Ticket, action: onOpenWalletPasses },
@@ -51,15 +64,11 @@ export const AppleLiquidDock: React.FC<AppleLiquidDockProps> = ({
     { id: 'api-tester', label: 'REST API', icon: Terminal, action: onOpenApiTester, badge: 'Live' },
     { 
       id: 'java-code', 
-      label: permissions.canEditJavaCode 
-        ? 'Java Backend (Admin)' 
-        : permissions.canViewJavaCode 
-        ? 'Java Backend (Read-Only)' 
-        : 'Java Backend (403 Locked)', 
-      icon: permissions.canViewJavaCode ? Code2 : Lock, 
+      label: 'Java Backend (Unlocked)', 
+      icon: Code2, 
       action: onOpenJavaModal,
-      badge: permissions.canEditJavaCode ? 'Admin' : !permissions.canViewJavaCode ? '403' : undefined,
-      locked: !permissions.canViewJavaCode
+      badge: 'Code',
+      locked: false
     },
     { 
       id: 'liquid-toggle', 

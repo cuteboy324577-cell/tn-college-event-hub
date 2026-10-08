@@ -23,6 +23,7 @@ interface HomePageProps {
   onRegisterEvent: (id: string) => void;
   onOpenApiTester: () => void;
   onOpenJavaModal: () => void;
+  onOpenAiChat?: () => void;
 }
 
 export const HomePage: React.FC<HomePageProps> = ({
@@ -31,6 +32,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   onRegisterEvent,
   onOpenApiTester,
   onOpenJavaModal,
+  onOpenAiChat,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
@@ -120,10 +122,28 @@ export const HomePage: React.FC<HomePageProps> = ({
           {/* Quick Action Buttons with balanced padding */}
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2 text-xs">
             <button
+              onClick={() => {
+                if (onOpenAiChat) onOpenAiChat();
+                else onNavigate('ai-chat');
+              }}
+              className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-600 via-indigo-600 to-purple-600 hover:from-cyan-500 hover:to-purple-500 text-white font-bold transition shadow-lg shadow-indigo-500/30 flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-cyan-400"
+            >
+              <Sparkles className="w-4 h-4 text-cyan-200 animate-pulse" />
+              <span>Ask Campus AI</span>
+              <span className="text-[10px] px-1 py-0.2 rounded bg-white/20">⌘J</span>
+            </button>
+            <button
               onClick={() => onNavigate('events')}
               className="px-4 py-2.5 rounded-xl bg-white text-slate-900 font-bold hover:bg-slate-100 transition shadow-xs focus-visible:ring-2 focus-visible:ring-white"
             >
               Browse All Events
+            </button>
+            <button
+              onClick={() => onNavigate('calendar')}
+              className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-cyan-500 hover:from-indigo-400 hover:to-cyan-400 text-white font-bold transition shadow-md shadow-indigo-500/25 flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-white"
+            >
+              <Calendar className="w-4 h-4" />
+              <span>Monthly Calendar</span>
             </button>
             <button
               onClick={() => onNavigate('add-event')}
@@ -332,7 +352,27 @@ export const HomePage: React.FC<HomePageProps> = ({
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs hover:border-cyan-300 transition group">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-cyan-500/20 to-purple-500/20 text-indigo-600 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+              <Sparkles className="w-6 h-6 text-indigo-600" />
+            </div>
+            <h3 className="font-bold text-slate-900 text-base mb-2">Campus AI Knowledge Bot</h3>
+            <p className="text-xs text-slate-600 leading-relaxed mb-3">
+              Ask natural questions to discover events, query deadlines, compare prize pools, and check your registered ticket passes instantly.
+            </p>
+            <button
+              onClick={() => {
+                if (onOpenAiChat) onOpenAiChat();
+                else onNavigate('ai-chat');
+              }}
+              className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1"
+            >
+              <span>Chat with AI</span>
+              <span className="text-[10px] bg-indigo-50 px-1 py-0.5 rounded font-mono">Gemini 3.8</span>
+            </button>
+          </div>
+
           <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs hover:border-indigo-300 transition">
             <div className="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-4">
               <QrCode className="w-6 h-6" />

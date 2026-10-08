@@ -123,3 +123,49 @@
 .squircle {
   border-radius: 26px;
 }
+
+/* Voice Recognition Waveform & Equalizer Animations */
+@keyframes wave-bounce {
+  0%, 100% {
+    transform: scaleY(0.18);
+    opacity: 0.45;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+@keyframes wave-pulse-ring {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.35);
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+@keyframes wave-glow-pulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.08);
+  }
+}
+
+.animate-wave-ring {
+  animation: wave-pulse-ring 2s cubic-bezier(0.2, 0.8, 0.4, 1) infinite;
+}
+
+.animate-wave-glow {
+  animation: wave-glow-pulse 2.5s ease-in-out infinite;
+}

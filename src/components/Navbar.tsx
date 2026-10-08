@@ -17,7 +17,8 @@ import {
   PhoneCall,
   Droplets,
   Ticket,
-  Lock
+  Lock,
+  CalendarDays
 } from 'lucide-react';
 import { User, UserRole, getRolePermissions } from '../types';
 import { apiService } from '../services/apiService';
@@ -27,6 +28,7 @@ interface NavbarProps {
   onNavigate: (view: string, params?: any) => void;
   onOpenApiTester: () => void;
   onOpenJavaModal: () => void;
+  onOpenAiChat?: () => void;
   currentUser: User;
   onUserChange: (user: User) => void;
   liquidMode: boolean;
@@ -39,6 +41,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onNavigate,
   onOpenApiTester,
   onOpenJavaModal,
+  onOpenAiChat,
   currentUser,
   onUserChange,
   liquidMode,
@@ -58,7 +61,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   const navLinks = [
-    { id: 'events', label: 'Explore Events', icon: Calendar },
+    { id: 'events', label: 'Explore Events', icon: Sparkles },
+    { id: 'calendar', label: 'Calendar', icon: CalendarDays },
     { id: 'colleges', label: 'Colleges', icon: Building2 },
     { id: 'search', label: 'Search', icon: Search },
     { id: 'about', label: 'About', icon: Info },
@@ -137,6 +141,22 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Right Action Utilities & User Menu */}
           <div className="hidden lg:flex items-center gap-2">
             
+            {/* Campus AI Assistant trigger */}
+            <button
+              onClick={() => {
+                if (onOpenAiChat) onOpenAiChat();
+                else onNavigate('ai-chat');
+              }}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-cyan-400/40 bg-gradient-to-r from-cyan-500/10 via-indigo-500/10 to-purple-500/10 hover:from-cyan-500/20 hover:to-purple-500/20 text-slate-800 hover:text-slate-950 text-xs font-semibold transition group shadow-2xs relative"
+              title="Open Campus AI Assistant (⌘J)"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-indigo-600 group-hover:rotate-12 transition-transform" />
+              <span>AI Bot</span>
+              <span className="text-[10px] font-mono px-1 rounded bg-indigo-100 text-indigo-700">
+                ⌘J
+              </span>
+            </button>
+
             {/* Apple Liquid Glass Mode Toggle */}
             <button
               onClick={onToggleLiquidMode}
@@ -173,36 +193,18 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
             </button>
 
-            {/* RBAC-Protected Java Spring Boot Code Exporter trigger */}
-            {permissions.canViewJavaCode ? (
-              <button
-                onClick={onOpenJavaModal}
-                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border text-xs font-semibold transition group shadow-2xs ${
-                  permissions.canEditJavaCode 
-                    ? 'border-emerald-300 bg-emerald-50/80 hover:bg-emerald-100 text-emerald-950' 
-                    : 'border-amber-200 bg-amber-50/80 hover:bg-amber-100 text-amber-950'
-                }`}
-                title={permissions.canEditJavaCode ? 'Java Backend (ROLE_ADMIN: Full Access)' : 'Java Backend (ROLE_ORGANIZER: Read-Only)'}
-              >
-                <Code2 className={`w-3.5 h-3.5 ${permissions.canEditJavaCode ? 'text-emerald-600' : 'text-amber-600'}`} />
-                <span>Java</span>
-                <span className={`text-[9px] font-bold px-1 rounded uppercase ${
-                  permissions.canEditJavaCode ? 'bg-emerald-200/60 text-emerald-800' : 'bg-amber-200/60 text-amber-800'
-                }`}>
-                  {permissions.canEditJavaCode ? 'Admin' : 'Read'}
-                </span>
-              </button>
-            ) : (
-              <button
-                onClick={onOpenJavaModal}
-                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-slate-200 bg-slate-100/70 hover:bg-rose-50 hover:border-rose-300 hover:text-rose-700 text-slate-400 text-xs font-medium transition group"
-                title="Java Backend Protected (403 Access Denied for Participants)"
-              >
-                <Lock className="w-3.5 h-3.5 text-slate-400 group-hover:text-rose-500" />
-                <span>Java</span>
-                <span className="text-[9px] font-mono text-slate-400 group-hover:text-rose-600">403</span>
-              </button>
-            )}
+            {/* Java Spring Boot Code Exporter trigger (Fully Unlocked) */}
+            <button
+              onClick={onOpenJavaModal}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-amber-200 bg-amber-50/80 hover:bg-amber-100 text-amber-950 text-xs font-semibold transition group shadow-2xs"
+              title="Java Spring Boot Backend Architecture (Unlocked)"
+            >
+              <Code2 className="w-3.5 h-3.5 text-amber-600 group-hover:scale-110 transition-transform" />
+              <span>Java</span>
+              <span className="text-[9px] font-bold px-1 rounded uppercase bg-emerald-100 text-emerald-800 border border-emerald-200">
+                Unlocked
+              </span>
+            </button>
 
             {/* Host Event Button */}
             <button
@@ -347,6 +349,19 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="pt-2 border-t border-slate-100 flex flex-col gap-2">
             <button
               onClick={() => {
+                if (onOpenAiChat) onOpenAiChat();
+                else onNavigate('ai-chat');
+                setMobileMenuOpen(false);
+              }}
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gradient-to-r from-cyan-600 via-indigo-600 to-purple-600 text-white text-sm font-semibold shadow-xs"
+            >
+              <Sparkles className="w-4 h-4 text-amber-300" />
+              <span>Campus AI Assistant</span>
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/20">Ask Anything</span>
+            </button>
+
+            <button
+              onClick={() => {
                 onNavigate('add-event');
                 setMobileMenuOpen(false);
               }}
@@ -384,14 +399,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                   onOpenJavaModal();
                   setMobileMenuOpen(false);
                 }}
-                className={`flex items-center justify-center gap-1 py-2 rounded-xl border text-xs font-semibold ${
-                  permissions.canViewJavaCode 
-                    ? 'border-amber-200 bg-amber-50 text-amber-900' 
-                    : 'border-slate-200 bg-slate-100 text-slate-400'
-                }`}
+                className="flex items-center justify-center gap-1 py-2 rounded-xl border border-amber-200 bg-amber-50 text-amber-900 text-xs font-semibold"
               >
-                {permissions.canViewJavaCode ? <Code2 className="w-3.5 h-3.5 text-amber-600" /> : <Lock className="w-3.5 h-3.5 text-slate-400" />}
-                <span>{permissions.canViewJavaCode ? 'Java' : 'Java (403)'}</span>
+                <Code2 className="w-3.5 h-3.5 text-amber-600" />
+                <span>Java</span>
               </button>
             </div>
           </div>

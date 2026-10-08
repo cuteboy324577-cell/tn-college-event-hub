@@ -30,6 +30,9 @@ import { SearchPage } from './pages/SearchPage';
 import { LoginPage } from './pages/LoginPage';
 import { AboutPage } from './pages/AboutPage';
 import { ContactPage } from './pages/ContactPage';
+import { CalendarPage } from './pages/CalendarPage';
+import { AiChatbotPage } from './pages/AiChatbotPage';
+import { AiChatbotWidget } from './components/AiChatbotWidget';
 
 export default function App() {
   const [currentUser, setCurrentUser] = useState<User>(() => apiService.getCurrentUser());
@@ -43,6 +46,7 @@ export default function App() {
   const [apiTesterOpen, setApiTesterOpen] = useState<boolean>(false);
   const [javaModalOpen, setJavaModalOpen] = useState<boolean>(false);
   const [walletPassModalOpen, setWalletPassModalOpen] = useState<boolean>(false);
+  const [aiChatOpen, setAiChatOpen] = useState<boolean>(false);
 
   // Initialize service storage
   useEffect(() => {
@@ -86,6 +90,7 @@ export default function App() {
         onOpenApiTester={() => setApiTesterOpen(true)}
         onOpenJavaModal={() => setJavaModalOpen(true)}
         onOpenWalletPasses={() => setWalletPassModalOpen(true)}
+        onOpenAiChat={() => setAiChatOpen(true)}
         liquidMode={liquidMode}
         onToggleLiquidMode={toggleLiquidMode}
         currentUser={currentUser}
@@ -97,6 +102,7 @@ export default function App() {
         onNavigate={navigateTo}
         onOpenApiTester={() => setApiTesterOpen(true)}
         onOpenJavaModal={() => setJavaModalOpen(true)}
+        onOpenAiChat={() => setAiChatOpen(true)}
         currentUser={currentUser}
         onUserChange={setCurrentUser}
         liquidMode={liquidMode}
@@ -113,6 +119,7 @@ export default function App() {
             onRegisterEvent={handleRegisterEvent}
             onOpenApiTester={() => setApiTesterOpen(true)}
             onOpenJavaModal={() => setJavaModalOpen(true)}
+            onOpenAiChat={() => setAiChatOpen(true)}
           />
         )}
 
@@ -120,8 +127,19 @@ export default function App() {
           <EventsPage
             initialCategory={viewParams.category}
             initialSearch={viewParams.search}
+            initialViewMode={viewParams.viewMode || 'grid'}
             onSelectEvent={handleSelectEvent}
             onRegisterEvent={handleRegisterEvent}
+            onNavigate={navigateTo}
+          />
+        )}
+
+        {currentView === 'calendar' && (
+          <CalendarPage
+            currentUser={currentUser}
+            onSelectEvent={handleSelectEvent}
+            onRegisterEvent={handleRegisterEvent}
+            onOpenWalletPasses={() => setWalletPassModalOpen(true)}
             onNavigate={navigateTo}
           />
         )}
@@ -231,6 +249,18 @@ export default function App() {
             onNavigate={navigateTo}
           />
         )}
+
+        {currentView === 'ai-chat' && (
+          <AiChatbotPage
+            currentUser={currentUser}
+            onNavigate={navigateTo}
+            onSelectEvent={handleSelectEvent}
+            onOpenWalletPasses={() => setWalletPassModalOpen(true)}
+            onOpenJavaModal={() => setJavaModalOpen(true)}
+            onOpenApiTester={() => setApiTesterOpen(true)}
+            onUserChange={setCurrentUser}
+          />
+        )}
       </main>
 
       {/* Global Campus Footer */}
@@ -238,6 +268,7 @@ export default function App() {
         onNavigate={navigateTo}
         onOpenApiTester={() => setApiTesterOpen(true)}
         onOpenJavaModal={() => setJavaModalOpen(true)}
+        onOpenAiChat={() => setAiChatOpen(true)}
       />
 
       {/* Apple Liquid Glass Dock Floating at bottom */}
@@ -247,6 +278,7 @@ export default function App() {
         onOpenApiTester={() => setApiTesterOpen(true)}
         onOpenJavaModal={() => setJavaModalOpen(true)}
         onOpenWalletPasses={() => setWalletPassModalOpen(true)}
+        onOpenAiChat={() => setAiChatOpen(true)}
         liquidMode={liquidMode}
         onToggleLiquidMode={toggleLiquidMode}
         currentUser={currentUser}
@@ -271,6 +303,20 @@ export default function App() {
         onClose={() => setJavaModalOpen(false)}
         currentUser={currentUser}
         onUserChange={setCurrentUser}
+      />
+
+      {/* Campus AI Assistant Floating Widget */}
+      <AiChatbotWidget
+        isOpen={aiChatOpen}
+        onToggle={() => setAiChatOpen(prev => !prev)}
+        onClose={() => setAiChatOpen(false)}
+        onNavigate={navigateTo}
+        onSelectEvent={handleSelectEvent}
+        onOpenWalletPasses={() => setWalletPassModalOpen(true)}
+        onOpenJavaModal={() => setJavaModalOpen(true)}
+        onOpenApiTester={() => setApiTesterOpen(true)}
+        onUserChange={setCurrentUser}
+        currentUser={currentUser}
       />
 
     </div>
