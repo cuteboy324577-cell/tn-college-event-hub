@@ -1,0 +1,8 @@
+{
+  "name": "College Event Hub",
+  "description": "Comprehensive centralized platform for discovering, organizing, registering, and managing inter-college competitions, symposiums, hackathons, and cultural fests.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
